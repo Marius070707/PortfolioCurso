@@ -46,7 +46,7 @@ function instalar_apache() {
     sudo apt install apache2 -y
     sudo systemctl enable apache2
     sudo systemctl start apache2
-    echo "✅ Apache instalado."
+    echo "Apache instalado."
     pausa
 }
 
@@ -58,7 +58,7 @@ function instalar_mariadb() {
     echo ""
     echo "Configurando seguridad de MariaDB..."
     sudo mysql_secure_installation
-    echo "✅ MariaDB instalado."
+    echo "MariaDB instalado."
     pausa
 }
 
@@ -66,7 +66,7 @@ function instalar_php() {
     echo "Instalando PHP..."
     sudo apt install php libapache2-mod-php php-mysql php-cli php-curl php-gd php-mbstring php-xml -y
     sudo systemctl restart apache2
-    echo "✅ PHP instalado."
+    echo "PHP instalado."
     pausa
 }
 
@@ -75,7 +75,7 @@ function instalar_phpmyadmin() {
     sudo apt install phpmyadmin -y
     sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
     sudo systemctl restart apache2
-    echo "✅ phpMyAdmin instalado."
+    echo "phpMyAdmin instalado."
     echo "Acceso: http://IP/phpmyadmin"
     pausa
 }
@@ -87,7 +87,7 @@ function instalar_webmin() {
     sudo dpkg -i webmin_1.995_all.deb
     sudo apt -f install -y
     sudo ufw allow 10000/tcp
-    echo "✅ Webmin instalado."
+    echo "Webmin instalado."
     echo "Acceso: https://IP:10000"
     pausa
 }
@@ -104,7 +104,7 @@ function crear_base_datos() {
     sudo mariadb -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
     sudo mariadb -e "FLUSH PRIVILEGES;"
 
-    echo "✅ Base de datos creada correctamente."
+    echo "Base de datos creada correctamente."
     pausa
 }
 
