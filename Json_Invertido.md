@@ -47,6 +47,31 @@ Tiene que ser array:
 ]
 
 
+Pero si sale 
+
+data.usuarios.forEach(usuario => console.log(usuario.email));
+
+Tiene que incluir usuarios 
+
+{
+  "usuarios": [
+    { "email": "usuario1@email.com" },
+    { "email": "usuario2@email.com" }
+  ]
+}
+
+
+Y si sale pedido.cliente.nombre
+
+es una estrucrtura mas simple
+
+{
+  "cliente": {
+    "nombre": "Carlos"
+  }
+}
+
+
 Comprobamos que funciona 
 
 php -S localhost:8000
