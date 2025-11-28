@@ -29,9 +29,7 @@ Script:
 
 #!/bin/bash
 
-# =============================
 # SERVIDOR LAMP - MENU BASH
-# =============================
 
 clear
 
