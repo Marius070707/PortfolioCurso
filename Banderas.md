@@ -83,7 +83,6 @@ Ahora vamos con la segunda bandera
 Bandera 2: Belgica
 
 git checkout -b belgica
-Modificar index.html:
 
 <div class="franja" style="background-color: black;"></div>
 <div class="franja" style="background-color: yellow;"></div>
