@@ -62,195 +62,405 @@ Conectamos un repo local
 
 --- RETO 4:
 
-	Desde la terminal:
-		Creación y ejecución del contendor mysql:
-			docker run --name mysql_server -d \
-			  -e MYSQL_ROOT_PASSWORD=Abcd1234 \
-			  -e MYSQL_DATABASE=bdcoches \
-			  -p 3307:3306 \
-			  -v mysql_data:/var/lib/mysql \
-			  mysql:latest
-		Accedemos al contenedor:
-			docker exec -it mysql_server bash
-			mysql -u root -p
-			Una vez dentro:
-				- Creamos la tabla COCHES en nuestra base de datos (mi_base_datos):
-					CREATE TABLE coches(
-						id INT PRIMARY KEY,
-						 marca VARCHAR(20),
-						 modelo VARCHAR(20),
-						 color VARCHAR(15),
-						 km INT,
-						 precio INT);
-				- Añadimos 10 registros:
-					INSERT INTO coches (id, marca, modelo, color, km, precio) VALUES
-						(1, 'Toyota', 'Corolla', 'Blanco', 50000, 15000),
-						(2, 'Honda', 'Civic', 'Negro', 30000, 18000),
-						(3, 'Ford', 'Focus', 'Azul', 40000, 14000),
-						(4, 'Chevrolet', 'Cruze', 'Rojo', 60000, 13000),
-						(5, 'Nissan', 'Sentra', 'Gris', 20000, 17000),
-						(6, 'Volkswagen', 'Golf', 'Blanco', 45000, 16000),
-						(7, 'Hyundai', 'Elantra', 'Azul', 35000, 15500),
-						(8, 'Kia', 'Rio', 'Negro', 25000, 14500),
-						(9, 'Renault', 'Megane', 'Rojo', 55000, 13500),
-						(10, 'Mazda', '3', 'Gris', 30000, 16500);
+Creamos contenedor MySQL
 
-## RETO 5:
-	Para que puedan verse los contenedores, creamos una red personalizada:
-		docker network create mi-red-app
-	Lanzamos un contenedor mysql, conectándolo a la red:
-			docker run -d \
-			  --name mi-db-sql \
-			  --network mi-red-app \
-			  -e MYSQL_ROOT_PASSWORD=Abcd1234 \
-			  -e MYSQL_DATABASE=bdcoches \
-			  mysql:latest
-		Creamos la tabla y le insertamos los datos, como en el reto anterior.
-	Creamos un directorio donde tendremos dos archivos:
-		1. consulta_db.py
-		2. Dockerfile
-	Construimos una imagen:
-		docker build -t mi-app-python .
-	Ejecutamos el contenedor:
-		docker run --rm --name mi-app-python --network mi-red-app mi-app-python
-	Nos mostrará por pantalla la tabla de los registros de la base de datos:
-		*** 🚗 Registros de la tabla 'coches' 🚗 ***
-		+----+------------+---------+--------+-------+--------+
-		| id |   marca    |  modelo | color  |   km  | precio |
-		+----+------------+---------+--------+-------+--------+
-		| 1  |   Toyota   | Corolla | Blanco | 50000 | 15000  |
-		| 2  |   Honda    |  Civic  | Negro  | 30000 | 18000  |
-		| 3  |    Ford    |  Focus  |  Azul  | 40000 | 14000  |
-		| 4  | Chevrolet  |  Cruze  |  Rojo  | 60000 | 13000  |
-		| 5  |   Nissan   |  Sentra |  Gris  | 20000 | 17000  |
-		| 6  | Volkswagen |   Golf  | Blanco | 45000 | 16000  |
-		| 7  |  Hyundai   | Elantra |  Azul  | 35000 | 15500  |
-		| 8  |    Kia     |   Rio   | Negro  | 25000 | 14500  |
-		| 9  |  Renault   |  Megane |  Rojo  | 55000 | 13500  |
-		| 10 |   Mazda    |    3    |  Gris  | 30000 | 16500  |
-		+----+------------+---------+--------+-------+--------+
+docker run --name mysql-coches \
+  -e MYSQL_ROOT_PASSWORD=rootpass \
+  -e MYSQL_DATABASE=cochesdb \
+  -p 3306:3306 \
+  -d mysql:8
 
-## RETO 6:
-	Desde el directorio donde hemos creado el Dockerfile, creamos dos archivos nuevos:
-		- .gitignore
-		- db_config.json
-	Modificamos consulta_db.py, para que apunte a db_config.json.
-	Reconstruimos la imagen:
-		docker build -t mi-app-python .
-	Añadimos esta linea al Dockerfile:
-		COPY db_config.json /app/
-	Lanzamos el contenedor:
-		docker run --rm --name mi-app-python --network mi-red-app mi-app-python
-	Nos mostrará la tabla de antes.
+Entramos al cliente MySQL
 
-## RETO 7:
-	Modificamos el archivo consulta_db.py, para que use la libreria prettytable.
-	Reconstruimos la imagen:
-		docker build -t mi-app-python .
-	Lanzamos el contenedor:
-		docker run --rm --name mi-app-python --network mi-red-app mi-app-python
-	Nos mostrará la tabla así:
-		✅ Conexión establecida correctamente a la BD.
+  docker exec -it mysql-coches mysql -u root -p
+  # password: rootpass
 
-	*** 🚗 Registros de la tabla 'coches' 🚗 ***
-	+----+------------+---------+--------+-------------+--------+
-	| ID | Marca      | Modelo  | Color  | Kilometraje | Precio |
-	+----+------------+---------+--------+-------------+--------+
-	| 1  | Toyota     | Corolla | Blanco | 50000       | 15000  |
-	+----+------------+---------+--------+-------------+--------+
-	| 2  | Honda      | Civic   | Negro  | 30000       | 18000  |
-	+----+------------+---------+--------+-------------+--------+
-	| 3  | Ford       | Focus   | Azul   | 40000       | 14000  |
-	+----+------------+---------+--------+-------------+--------+
-	| 4  | Chevrolet  | Cruze   | Rojo   | 60000       | 13000  |
-	+----+------------+---------+--------+-------------+--------+
-	| 5  | Nissan     | Sentra  | Gris   | 20000       | 17000  |
-	+----+------------+---------+--------+-------------+--------+
-	| 6  | Volkswagen | Golf    | Blanco | 45000       | 16000  |
-	+----+------------+---------+--------+-------------+--------+
-	| 7  | Hyundai    | Elantra | Azul   | 35000       | 15500  |
-	+----+------------+---------+--------+-------------+--------+
-	| 8  | Kia        | Rio     | Negro  | 25000       | 14500  |
-	+----+------------+---------+--------+-------------+--------+
-	| 9  | Renault    | Megane  | Rojo   | 55000       | 13500  |
-	+----+------------+---------+--------+-------------+--------+
-	| 10 | Mazda      | 3       | Gris   | 30000       | 16500  |
-	+----+------------+---------+--------+-------------+--------+
+Creamos tablas y datos
 
+USE cochesdb;
+
+CREATE TABLE coches (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  marca VARCHAR(50),
+  modelo VARCHAR(50),
+  color VARCHAR(30),
+  km INT,
+  precio DECIMAL(10,2)
+);
+
+INSERT INTO coches (marca, modelo, color, km, precio) VALUES
+('Toyota', 'Corolla', 'Blanco', 20000, 15000),
+('Honda', 'Civic', 'Rojo', 30000, 17000),
+('Ford', 'Focus', 'Azul', 25000, 16000),
+('BMW', 'Serie 1', 'Negro', 40000, 22000),
+('Audi', 'A3', 'Gris', 35000, 21000),
+('Seat', 'Ibiza', 'Rojo', 15000, 14000),
+('Volkswagen', 'Golf', 'Blanco', 28000, 19000),
+('Renault', 'Clio', 'Azul', 32000, 13000),
+('Peugeot', '308', 'Negro', 27000, 18000),
+('Kia', 'Ceed', 'Blanco', 23000, 16000);
+
+Y comprobamos con
+
+SELECT * FROM coches;
+
+
+--- RETO 5:
+
+En la carpeta del proyecto del host
+
+  cd /home/usuario/proyecto-coches
+
+Creamos list_coches.py con:
+
+import mysql.connector
+
+def get_connection():
+    conn = mysql.connector.connect(
+        host="localhost",
+        port=3306,
+        user="root",
+        password="rootpass",
+        database="cochesdb"
+    )
+    return conn
+
+def main():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, marca, modelo, color, km, precio FROM coches")
+    rows = cursor.fetchall()
+
+    # Cabecera
+    print("ID  {:<12} {:<12} {:<8} {:<10} {:<10}".format(
+        "MARCA", "MODELO", "COLOR", "KM", "PRECIO"
+    ))
+    print("-" * 70)
+
+    # Filas
+    for r in rows:
+        id_, marca, modelo, color, km, precio = r
+        print("{:<3} {:<12} {:<12} {:<8} {:<10} {:<10}".format(
+            id_, marca, modelo, color, km, float(precio)
+        ))
+
+    cursor.close()
+    conn.close()
+
+if __name__ == "__main__":
+    main()
+
+
+Ahora desde el contenedor:
+
+  docker start reto2-app
+  docker exec -it reto2-app bash
+
+  cd /app
+  python3 list_coches.py
+
+Y hacemos el commit:
+
+  cd /home/usuario/proyecto-coches
+  git add list_coches.py
+  git commit -m "Añadir script básico para listar coches desde MySQL"
+  git push
+
+
+--- RETO 6:
+
+Creamos el archivo JSON
+
+  cd /home/usuario/proyecto-coches
+  cat > config_db.json << 'EOF'
+  {
+    "mysql": {
+      "host": "localhost",
+      "port": 3306,
+      "user": "root",
+      "password": "rootpass",
+      "database": "cochesdb"
+    }
+  }
+  EOF
+
+
+ 
+Y un script que lo lea
+
+
+
+import json
+import mysql.connector
+
+def get_config(path="config_db.json"):
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def get_connection():
+    config = get_config()["mysql"]
+    conn = mysql.connector.connect(
+        host=config["host"],
+        port=config["port"],
+        user=config["user"],
+        password=config["password"],
+        database=config["database"]
+    )
+    return conn
+
+def main():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, marca, modelo, color, km, precio FROM coches")
+    rows = cursor.fetchall()
+
+    print("ID  {:<12} {:<12} {:<8} {:<10} {:<10}".format(
+        "MARCA", "MODELO", "COLOR", "KM", "PRECIO"
+    ))
+    print("-" * 70)
+
+    for r in rows:
+        id_, marca, modelo, color, km, precio = r
+        print("{:<3} {:<12} {:<12} {:<8} {:<10} {:<10}".format(
+            id_, marca, modelo, color, km, float(precio)
+        ))
+
+    cursor.close()
+    conn.close()
+
+if __name__ == "__main__":
+    main()
+
+Probamos dentro del contenedor
+
+  docker exec -it reto2-app bash
+  cd /app
+  python3 list_coches_json.py
+
+Creamos el gitimore para no subir el JSON
+
+  cd /home/usuario/proyecto-coches
+  echo "config_db.json" >> .gitignore
+
+Y hacemos los commits
+
+git add list_coches_json.py
+git commit -m "Leer configuración de MySQL desde JSON"
+git add .gitignore
+git commit -m "Ignorar archivo de configuración de base de datos"
+git push
+
+
+
+--- RETO 7:
+
+Instalamos tabulate en el contenedor app
+
+  docker exec -it reto2-app bash
+  pip3 install tabulate
+
+Y hacemos el nuevo script
+
+import json
+import mysql.connector
+from tabulate import tabulate
+
+def get_config(path="config_db.json"):
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def get_connection():
+    config = get_config()["mysql"]
+    conn = mysql.connector.connect(
+        host=config["host"],
+        port=config["port"],
+        user=config["user"],
+        password=config["password"],
+        database=config["database"]
+    )
+    return conn
+
+def main():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, marca, modelo, color, km, precio FROM coches")
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    headers = ["ID", "Marca", "Modelo", "Color", "Kilometraje", "Precio"]
+    # Convertir DECIMAL a float para tabulate
+    data = [
+        [id_, marca, modelo, color, km, float(precio)]
+        for (id_, marca, modelo, color, km, precio) in rows
+    ]
+
+    print(tabulate(data, headers=headers, tablefmt="grid"))
+
+if __name__ == "__main__":
+    main()
+
+
+Nos tiene que dar algo parecido
+
++----+--------+---------+--------+--------------+----------+
+| ID | Marca  | Modelo  | Color  |   Kilometraje|   Precio |
++----+--------+---------+--------+--------------+----------+
+|  1 | Toyota | Corolla | Blanco |        20000 |   15000  |
+|  2 | Honda  | Civic   | Rojo   |        30000 |   17000  |
+etc...
++----+--------+---------+--------+--------------+----------+
+
+Probamos los commits
+
+  docker exec -it reto2-app bash
+  cd /app
+  python3 list_coches_tabla.py
+
+
+En el host
+
+  cd /home/usuario/proyecto-coches
+  git add list_coches_tabla.py
+  git commit -m "Listar coches con tabla formateada usando tabulate"
+  git push
+
+
+ 
 ## RETO 8:
-	Creamos el contenedor mongo en el mismo directorio que hemos usando para los retos anteriores:
-		docker run -d \
-			  --name mi-mongo \
-			  --network mi-red-app \
-			  -p 27017:27017 \
-			  -e MONGO_INITDB_ROOT_USERNAME=mongouser \
-			  -e MONGO_INITDB_ROOT_PASSWORD=mongo1234 \
-			  mongo:latest
-	Accedemos al contenedor:
-		docker exec -it mi-mongo mongosh -u mongouser -p mongo1234 --authenticationDatabase admin
-		Usamos estos comandos:
-			use bdcoches_mongo
-		Añadimos registros:
-			db.coches.insertMany([
-				  {
-				    "ID": 1,
-				    "Marca": "Toyota",
-				    "Modelo": "Corolla",
-				    "Color": "Rojo",
-				    "km": 25000,
-				    "Precio": 15000
-				  },
-				  {
-				    "ID": 2,
-				    "Marca": "Honda",
-				    "Modelo": "Civic",
-				    "Color": "Azul",
-				    "km": 30000,
-				    "Precio": 18000
-				  },
-				  {
-				    "ID": 3,
-				    "Marca": "Ford",
-				    "Modelo": "Focus",
-				    "Color": "Blanco",
-				    "km": 40000,
-				    "Precio": 17000
-				  }
-				])
-		Creamos un documento: consulta_mongo.py
-		Actualizamos el Dockerfile.
-		Construimos la imagen y lo lanzamos:
-			docker build -t mi-mongo .
-			docker run --rm --name mi-mongo1 --network mi-red-app mi-mongo
-		Visualizamos la tabla:
-			 Conexión establecida a MongoDB.
-			***  Registros de la colección 'coches' (MongoDB)  ***
-			+----+--------+---------+--------+-------------+--------+
-			| ID | Marca  | Modelo  | Color  | Kilometraje | Precio |
-			+----+--------+---------+--------+-------------+--------+
-			| 1  | Toyota | Corolla | Rojo   | 25000       | 15000  |
-			+----+--------+---------+--------+-------------+--------+
-			| 2  | Honda  | Civic   | Azul   | 30000       | 18000  |
-			+----+--------+---------+--------+-------------+--------+
-			| 3  | Ford   | Focus   | Blanco | 40000       | 17000  |
-			+----+--------+---------+--------+-------------+--------+
 
-## RETO 9:
-	En un nuevo directorio llamado reto9, crearemos:
-		Dockerfile
-		init-mongo.js
-	Accedemos a DockerHub:
-		docker login
-	Construimos la imagen:
-		docker build -t <TU_USUARIO_DOCKERHUB>/mongo-coches:latest .
-	Subimos la imagen:
-		docker push <TU_USUARIO_DOCKERHUB>/mongo-coches:latest
-	Accedemos a nuestro ParrotOS:
-		Lanzamos la imagen:
-			docker run -d \
-			  --name mongo-desde-hub \
-			  -e MONGO_INITDB_ROOT_USERNAME=mongouser \
-			  -e MONGO_INITDB_ROOT_PASSWORD=mongo1234 \
-			  -p 27017:27017 \
-			  <TU_USUARIO_DOCKERHUB>/mongo-coches:latest
-		docker exec -it mongo-desde-hub mongosh -u mongouser -p mongo1234 --authenticationDatabase admin
+Creamos el contenedor Mongo
+
+docker run --name mongo-coches \
+  -p 27017:27017 \
+  -d mongo:latest
+
+Nos conectamos desde la terminal usando mongosh
+
+  docker exec -it mongo-coches mongosh
+
+
+Dentro metemos 
+
+use cochesdb
+
+db.coches.insertMany([
+  { id: 1, marca: "Toyota", modelo: "Corolla", color: "Rojo", km: 25000, precio: 15000 },
+  { id: 2, marca: "Honda", modelo: "Civic",   color: "Azul", km: 30000, precio: 18000 },
+  { id: 3, marca: "Ford",  modelo: "Focus",   color: "Blanco", km: 40000, precio: 17000 },
+  { id: 4, marca: "BMW",   modelo: "Serie 1", color: "Negro", km: 35000, precio: 22000 },
+  { id: 5, marca: "Audi",  modelo: "A3",      color: "Gris",  km: 32000, precio: 21000 }
+])
+
+Y comrpobamos
+
+  db.coches.find().pretty()
+
+
+Instalamos pymongo 
+
+docker exec -it reto2-app bash
+pip3 install pymongo tabulate
+
+
+En el host creamos list_coches_mongo.py
+
+from pymongo import MongoClient
+from tabulate import tabulate
+
+def get_client():
+    # Mongo en localhost, puerto 27017
+    client = MongoClient("mongodb://localhost:27017/")
+    return client
+
+def main():
+    client = get_client()
+    db = client["cochesdb"]
+    collection = db["coches"]
+
+    docs = list(collection.find())
+    client.close()
+
+    headers = ["ID", "Marca", "Modelo", "Color", "Kilometraje", "Precio"]
+    data = []
+    for d in docs:
+        data.append([
+            d.get("id"),
+            d.get("marca"),
+            d.get("modelo"),
+            d.get("color"),
+            d.get("km"),
+            d.get("precio")
+        ])
+
+    print(tabulate(data, headers=headers, tablefmt="grid"))
+
+if __name__ == "__main__":
+    main()
+
+
+
+Comprobamos
+
+  docker exec -it reto2-app bash
+  cd /app
+  python3 list_coches_mongo.py
+
+Y hacemos los commits
+
+cd /home/usuario/proyecto-coches
+git add list_coches_mongo.py
+git commit -m "Script Python para listar coches desde MongoDB"
+git push
+
+
+
+--- RETO 9:
+
+En /home/usuario/proyecto-coches/mongo-image/
+
+  mkdir -p mongo-image
+  cd mongo-image
+
+El archivo ini-coches.js
+
+db = db.getSiblingDB('cochesdb');
+
+db.coches.insertMany([
+  { id: 1, marca: "Toyota", modelo: "Corolla", color: "Rojo", km: 25000, precio: 15000 },
+  { id: 2, marca: "Honda", modelo: "Civic",   color: "Azul", km: 30000, precio: 18000 },
+  { id: 3, marca: "Ford",  modelo: "Focus",   color: "Blanco", km: 40000, precio: 17000 },
+  { id: 4, marca: "BMW",   modelo: "Serie 1", color: "Negro", km: 35000, precio: 22000 },
+  { id: 5, marca: "Audi",  modelo: "A3",      color: "Gris",  km: 32000, precio: 21000 }
+]);
+
+
+Dockerfille:
+
+FROM mongo:latest
+
+  COPY init-coches.js /docker-entrypoint-initdb.d/init-coches.js
+
+Construimos la oimagen
+
+  docker build -t tuusuario/mongo-coches:1.0 .
+
+Y lo subimos  a DockerHub
+
+  docker login
+  # usuario y contraseña de Docker Hub
+  docker push tuusuario/mongo-coches:1.0
+
+En Parrot
+
+docker pull tuusuario/mongo-coches:1.0
+
+ docker run --name mongo-coches-parrot \
+  -p 27017:27017 \
+  -d tuusuario/mongo-coches:1.0
+
+La BD cochesdb y la colección coches se crearán automáticamente con los datos que pusimos en init-coches.js
+
+
+
+
