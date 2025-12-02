@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Diagnóstico de Ingeniería</title>
+  <style>
+    body {
+      background: #000000;
+      color: #ffe0a3;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #ff9c00;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .panel-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+    .panel {
+      background: #331144;
+      border-radius: 10px;
+      padding: 15px;
+      min-width: 220px;
+      box-shadow: 0 0 10px #ff9c00;
+    }
+    .panel-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #ffcc66;
+    }
+    .ok {
+      color: #00ff99;
+    }
+    .fail {
+      color: #ff5555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Panel de Diagnóstico de Ingeniería</h1>
+  <div class="panel-container">
+    <div class="panel">
+      <div class="panel-title">Apache</div>
+      <div id="apache">Cargando...</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">MySQL / MariaDB</div>
+      <div id="mysql">Cargando...</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Versión de PHP</div>
+      <div id="php_version">Cargando...</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Versión de Docker</div>
+      <div id="docker_version">Cargando...</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Kernel</div>
+      <div id="kernel_version">Cargando...</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Tiempo activo (uptime)</div>
+      <div id="uptime">Cargando...</div>
+    </div>
+  </div>
+
+  <script>
+    fetch('telemetria.json')
+      .then(response => response.json())
+      .then(data => {
+        function estadoTexto(valor) {
+          if (valor === 'active') {
+            return '<span class="ok">ACTIVE</span>';
+          } else if (valor === 'inactive' || valor === 'failed') {
+            return '<span class="fail">' + valor.toUpperCase() + '</span>';
+          } else {
+            return valor;
+          }
+        }
+
+        document.getElementById('apache').innerHTML = estadoTexto(data.apache);
+        document.getElementById('mysql').innerHTML = estadoTexto(data.mysql);
+        document.getElementById('php_version').textContent = data.php_version;
+        document.getElementById('docker_version').textContent = data.docker_version || 'No instalado';
+        document.getElementById('kernel_version').textContent = data.kernel_version;
+        document.getElementById('uptime').textContent = data.uptime;
+      })
+      .catch(err => {
+        console.error(err);
+        document.body.innerHTML += '<p>Error cargando telemetría.</p>';
+      });
+  </script>
+</body>
+</html>
+

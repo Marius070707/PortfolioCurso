@@ -1,0 +1,8 @@
+{
+  "apache": "active",
+  "mysql": "active",
+  "php_version": "8.3.6",
+  "docker_version": "28.2.2",
+  "kernel_version": "6.8.0-87-generic",
+  "uptime": "9 minutes"
+}
