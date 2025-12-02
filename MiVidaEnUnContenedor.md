@@ -1,55 +1,67 @@
-## RETO 1:
-	Creación y ejecución del contenedor ubuntu:
-		docker run -it --name reto-ubuntu ubuntu:latest
-	Dentro del contenedor:
-		- Lo primero será actualizar el sistema:
-			apt update && apt upgrade -y
-		- Instalación de Python:
-			 apt install python3 -y
-		- Instalación de librerías:
-			 apt install python3-pip -y
-			 apt install python3-requests -y
-		- Para MySQL:
-			 apt install mysql-client -y
-			 apt install python3-mysql.connector -y
-			 apt install python3-mysqldb -y
-	Creación de una imagen personalizada con el contenedor:
-		- Definimos la carpeta en el contenedor, para asociarla luego al hacer un volumen Bind:
-			Para ello vamos a:
-				cd /home/ubuntu
-			Creamos una carpeta llamada python:
-				mkdir python
-				cd python
-			Fuera del contenedor, creamos la imagen personalizada para poder crear contenedores con esta configuracion:
-				docker commit reto-ubuntu mi-imagen-personalizada
+--- RETO 1
 
-## RETO 2:
-	Desde terminal, en Ubuntu, ya que es el sistema operativo que tengo en mi host:
-		Creación y ejecución de un nuevo contenedor con la imagen creada:
-			docker run --name  reto_ubuntu_python -it -v /home/diego1109/volumenes/reto_ubuntu:/home/ubuntu/python mi-imagen-personalizada:latest
+Creación y ejecución del contenedor ubuntu
 
-## RETO 3:
-	Desde el contenedor:
-		Una vez dentro del contenedor, vamos a la carpeta python:
-			cd /home/ubuntu/python
-		Creamos un documento y escribimos algo dentro de él:
-			touch hola.txt
-			echo "Hola Mundo" > hola.txt
-		Subimos al repositorio de GitHub:
-			Para ello, lo primero será instalar GIT:
-				apt install git -y
-			Configuracion de GIT:
-				git config --global user.email "17diego10fer@gmail.com"
-				git config --global user.name "dieego-17"
-				git config --global --add safe.directory /home/ubuntu/python
-				git init
-				git add hola.txt
-				git commit -m "Archivo contenedor ubuntu"
-				git branch -M main
-				git remote add origin https://github.com/dieego-17/reto2_mi_vida_en_un_contenedor.git
-				git push -u origin main
+  docker run -it --name reto-ubuntu ubuntu:latest
+  
+Dentro del contenedor
 
-## RETO 4:
+Dentro del contenedor, instalamos Python y librerías
+
+  apt-get update
+  apt-get install -y python3 python3-pip
+
+  pip3 install requests mysql-connector-python
+
+Comprobamos con
+
+  python3 -c "import requests, mysql.connector; print('OK')"
+
+Para MySQL
+  apt install mysql-client -y
+  apt install python3-mysql.connector -y
+  apt install python3-mysqldb -y
+
+			 
+Creamos una imagen personalizada con el contenedor:
+
+  docker commit reto1-ubuntu ubuntu-python-mysql:1.0
+
+
+--- RETO 2:
+Crear contenedor nuevo con la imagen personalizada y un volumen bind
+Creamos la carpeta en el host
+
+  mkdir -p /home/usuario/proyecto-coches
+
+Y lanzamos el contenedor con bind mount
+
+  docker run -it --name reto2-app \
+  -v /home/usuario/proyecto-coches:/app \
+  ubuntu-python-mysql:1.0
+
+
+--- RETO 3:
+En el host:
+
+  cd /home/usuario/proyecto-coches
+  git init
+  git add .
+  git commit -m "Inicializar proyecto"
+
+En GitHub creamos un repo vacío llamado proyecto-coches
+
+Conectamos un repo local
+
+  git branch -M main
+  git remote add origin https://github.com/TUUSUARIO/proyecto-coches.git
+  git push -u origin main
+
+
+
+
+--- RETO 4:
+
 	Desde la terminal:
 		Creación y ejecución del contendor mysql:
 			docker run --name mysql_server -d \
