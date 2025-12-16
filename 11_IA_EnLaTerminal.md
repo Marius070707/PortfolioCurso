@@ -47,10 +47,8 @@ Y después con respuestas más técnicas
 
   tgpt "Explícame qué es SHA-256 con un ejemplo práctico"
   
-También hay modo conversación que permite hacer varias preguntas seguidas manteniendo contexto.
+También hay un modo conversación que te permite hacer preguntas siguiendo el contexto de las anteriores
 
   tgpt -c
 
 
-
-"comando para ver conexiones activas en linux"
