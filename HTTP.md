@@ -1,7 +1,7 @@
 --Pregunta 1--
 ¿Cuántos paquetes contiene el PCAP?
 
-  El archivo PCAP está formado por 6 paquetes.
+  El archivo PCAP está formado por 6 paquetes
 
 ¿Entre qué direcciones IP se establece la comunicación?
 
@@ -10,8 +10,8 @@
 
 Puertos utilizados:
 
-  Puerto de origen: 12345, que corresponde al puerto desde el que el cliente inicia la conexión.
-  Puerto de destino: 80, ya que se trata de tráfico HTTP.
+  Puerto de origen: 12345, que corresponde al puerto desde el que el cliente inicia la conexión
+  Puerto de destino: 80, ya que se trata de tráfico HTTP
 
 ---Pregunta 2---
 
@@ -47,7 +47,7 @@ Contiene las etiquetas básicas <html> y <body>, lo que indica que el documento 
 
 ¿Qué recurso intentaba solicitar el cliente?
 
-  El recurso solicitado es /noexiste.html.
+  El recurso solicitado es /noexiste.html
 
 ¿Qué mensaje devuelve el servidor en el cuerpo de la respuesta?
 
@@ -87,7 +87,7 @@ La diferencia se debe a que cada respuesta contiene un mensaje HTML con distinta
 
   Content-Type:
 
-En los tres casos es text/html; charset=UTF-8, por lo que el servidor siempre responde con HTML, incluso cuando hay errores.
+En los tres casos es text/html; charset=UTF-8, por lo que el servidor siempre responde con HTML, incluso cuando hay errores
 
   Date:
 
@@ -97,11 +97,11 @@ En los tres casos es text/html; charset=UTF-8, por lo que el servidor siempre re
 
   500 Error: 10:00:15 GMT
 
-Esto indica que las peticiones no se realizaron exactamente al mismo tiempo, aunque fueron bastante seguidas.
+Esto indica que las peticiones no se realizaron exactamente al mismo tiempo
 
 Server:
 
-En todas las respuestas aparece DemoServer/1.0, lo que indica que el mismo servidor gestionó todas las peticiones.
+En todas las respuestas aparece DemoServer/1.0 lo que indica que el mismo servidor gestionó las peticiones
 
 ---Pregunta 7---
 
@@ -109,12 +109,12 @@ En todas las respuestas aparece DemoServer/1.0, lo que indica que el mismo servi
 
 a) Reconstrucción de la actividad del usuario:
 
-  Al tratarse de tráfico HTTP sin cifrar, el analista puede ver las URLs solicitadas y el orden en el que se accedió a ellas, permitiendo reconstruir las acciones realizadas por el usuario.
+  Al ser tráfico HTTP sin cifrar se puede ver las URLs solicitadas y el orden en el que se accedió a ellas. Así puedes reconstruir lo que se ha hecho
 
 b) Detección de problemas o errores del servidor:
 
-  Los códigos de estado y los mensajes devueltos permiten detectar errores frecuentes, como recursos inexistentes o fallos internos del servidor, que podrían indicar mala configuración.
+  Los códigos de estado y los mensajes devueltos hacen posible detectar errores frecuentes como fallos del servidor. Esto sería por mala configuración
 
 c) Identificación de comportamientos sospechosos:
 
-  El acceso a rutas como /causar_error puede indicar pruebas manuales o intentos de provocar fallos en el servidor, algo que podría estar relacionado con actividades de exploración o ataque.
+  El acceso a rutas como /causar_error puede significar intentos de provocar fallos en el servidor lo que podría significar actividades sospechosas
