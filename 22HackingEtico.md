@@ -27,7 +27,8 @@ Archivos de WordPress (plugins, temas, subidas)
 4.1 Ejecutar MySQL con variables de entorno
 Crea un contenedor llamado wp-mysql:
 
-docker run -d \ --name wp-mysql \ --network wp-net \ -v wp-db:/var/lib/mysql \ -e MYSQL_DATABASE=wordpress \ -e MYSQL_USER=wpuser \ -e MYSQL_PASSWORD=wp-pass-123 \ -e MYSQL_ROOT_PASSWORD=root-pass-123 \ mysql:8.0
+  docker run -d \ --name wp-mysql \ --network wp-net \ -v wp-db:/var/lib/mysql \ -e MYSQL_DATABASE=wordpress \ -e MYSQL_USER=wpuser \ -e MYSQL_PASSWORD=wp-pass-123 \ -e MYSQL_ROOT_PASSWORD=root-pass-123 \ mysql:8.0
+  
 4.2 Comprobar que está vivo
 
   docker ps docker logs wp-mysql --tail 30
@@ -38,7 +39,7 @@ Si ves mensajes de “ready for connections” (o similar), perfecto.
 5.1 Ejecutar WordPress apuntando a la DB
 Creamos el contenedor wp-web y lo publicamos en el puerto 8080:
 
-  docker run -d \ --name wp-web \ --network wp-net \ -p 8080:80 \ -v wp-html:/var/www/html \ -e WORDPRESS_DB_HOST=wp-mysql:3306 \ -e WORDPRESS_DB_NAME=wordpress \ -e WORDPRESS_DB_USER=wpuser \ -e WORDPRESS_DB_PASSWORD=wp-pass-123 \ wordpress:latest
+  docker run -d \ --name wp-web \ --network wp-net \ -p 8080:80 \ -v wp-html:/var/www/html \ -e WORDPRESS_DB_HOST=wp-mysql:3306 \ -e WORDPRESS_DB_NAME=wordpress \ -e WORDPRESS_DB_USER=wpuser \ -e WORDPRESS_DB_PASSWORD=wp-pass-123 \   wordpress:latest
   
 5.2 Verificar logs
 
@@ -77,8 +78,11 @@ Completa el instalador: Idioma, Título del sitio, Usuario admin, Password, Emai
 Si borras contenedores, los datos siguen porque están en volúmenes.
 
 9.1 Borrar contenedores
-docker rm -f wp-web wp-mysql
+
+  docker rm -f wp-web wp-mysql
+
 9.2 Volver a crearlos usando los mismos volúmenes
+
 Repite los docker run de los pasos 4 y 5 y verás que todo sigue.
 
 10) Limpieza total (borrado completo)
@@ -109,6 +113,7 @@ A3) “Access denied” en MySQL
 Suele ser contraseña/usuario mal puestos. Revisa variables. Si ya creaste la base con datos erróneos, recuerda que MySQL guarda usuarios en el volumen: o corriges dentro, o borras volumen (Anexo 10).
 
 -----------------PARTE 2-------------------------
+
 Caso de uso 1 — Identificación básica del objetivo
 Objetivo
 Confirmar que el sitio usa WordPress y obtener información general sin ser agresivos.
